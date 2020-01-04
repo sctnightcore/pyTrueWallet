@@ -18,7 +18,7 @@ class Truewallet(object):
 		self.mobile_tracking = None
 		self.data = {}
 		self.credentials = {}
-		if self.mobile_tracking == None and self.device_id == None:
+		if self.mobile_tracking is None and self.device_id is None:
 			if os.path.isfile("truewallet_identity.json"):
 				with open("truewallet_identity.json", 'r') as File:
 					data = json.load(File)
@@ -51,7 +51,7 @@ class Truewallet(object):
 
 	def setCredentials(self, username=None, password=None, reference_token=None, type=None):
 		if type is None:
-			if re.search("^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", username):
+			if re.search('^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$', username):
 				type = "email"
 			else: 
 				type = "mobile"
@@ -64,13 +64,13 @@ class Truewallet(object):
 		self.setReferenceToken(reference_token)
 
 	def setAccessToken(self, access_token):
-		if access_token == None:
+		if access_token is None:
 			self.access_token = None
 		else:
 			self.access_token = str(access_token)
 
 	def setReferenceToken(self, reference_token):
-		if reference_token == None:
+		if reference_token is None:
 			self.reference_token = None
 		else:
 			self.reference_token = str(reference_token)
@@ -100,13 +100,13 @@ class Truewallet(object):
 
 	def SubmitLoginOTP(self, otp_code, mobile_number, otp_reference):
 		if mobile_number is None and self.data["mobile_number"] is not None: mobile_number = self.data["mobile_number"]
-		if otp_reference is None and self.data["otp_reference"] is not None: otp_code = self.data["otp_reference"]
+		if otp_reference is None and self.data["otp_reference"] is not None: otp_reference = self.data["otp_reference"]
 		if mobile_number is None or otp_reference is None: return False
 		timestamp = self.getTimestamp()
 		r = requests.post(self.SubmitLoginOTP_url,
 				json={
 					'type': self.credentials["type"],
-					'otp_code': str(otp_reference),
+					'otp_code': str(otp_code),
 					'mobile_number': str(mobile_number),
 					'otp_reference': str(otp_reference),
 					'device_id': self.device_id,
