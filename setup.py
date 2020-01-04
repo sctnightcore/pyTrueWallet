@@ -6,8 +6,7 @@ setup(name="pyTrueWallet",
       description="Unoffical TrueMoney Wallet API Class for Python",
       author="sctnightcore",
       author_email="nightcoremax@gmail.com",
-      url="",
-      download_url="",
+      url="https://github.com/sctnightcore/pyTrueWallet",
       packages=["pyTrueWallet"],
-      license="GNU v3"
+      license="GPL v3"
     )
