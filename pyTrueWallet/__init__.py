@@ -13,7 +13,7 @@ class Truewallet(object):
 	GetBalance_url = Base_url + "/user-profile-composite/v1/users/balance/"
 	GetTransaction_url = Base_url + "/user-profile-composite/v1/users/transactions/history/"
 
- 	def __init__(self, email=None, password=None, reference_token=None):
+	def __init__(self, email=None, password=None, reference_token=None):
 		self.device_id = None
 		self.mobile_tracking = None
 		self.data = {}
@@ -35,7 +35,7 @@ class Truewallet(object):
 
 	def _check_response(self, data):
 		try:
-  			data_json = json.load(data.content)
+			data_json = json.load(data.content)
 			if data_json.get("data"):
 				self.data = data_json["data"]
 				return data_json
@@ -51,7 +51,11 @@ class Truewallet(object):
 
 	def setCredentials(self, username=None, password=None, reference_token=None, type=None):
 		if type is None:
-			if re.search("^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", username): type = "email" else: type = "mobile"
+			if re.search("^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", username):
+				type = "email"
+			else: 
+				type = "mobile"
+
 		self.credentials["username"] = str(username)
 		self.credentials["password"] = str(password)
 		self.credentials["password_enc"] = str(hashlib.sha1((self.credentials['username']+self.credentials['password']).encode('utf-8')).hexdigest())
@@ -91,7 +95,7 @@ class Truewallet(object):
 					'username': self.credentials["username"],
 					'password': self.credentials["password_enc"]
 				}
-            )
+			)
 		return self._check_response(r)
 
 	def SubmitLoginOTP(self, otp_code, mobile_number, otp_reference):
@@ -100,13 +104,13 @@ class Truewallet(object):
 		if mobile_number is None or otp_reference is None: return False
 		timestamp = self.getTimestamp()
 		r = requests.post(self.SubmitLoginOTP_url,
-                json={
+				json={
 					'type': self.credentials["type"],
 					'otp_code': str(otp_reference),
 					'mobile_number': str(mobile_number),
 					'otp_reference': str(otp_reference),
 					'device_id': self.device_id,
-					'mobile_tracking', self.mobile_tracking,
+					'mobile_tracking': self.mobile_tracking,
 					'timestamp': timestamp,
 					'signature': str(hmac.new(self.Secret_key, "{}|{}|{}|{}|{}|{}|{}".format(self.credentials['type'], otp_code, mobile_number, otp_reference, self.device_id, self.mobile_tracking, timestamp).encode('utf-8'), hashlib.sha1).hexdigest())
 				},
@@ -117,7 +121,7 @@ class Truewallet(object):
 					'username': self.credentials["username"],
 					'password': self.credentials["password_enc"]
 				}
-            )
+			)
 		if data_json["data"]["access_token"]: self.setAccessToken(data_json["data"]["access_token"])
 		if data_json["data"]["reference_token"]: self.setReferenceToken(data_json["data"]["reference_token"])
 		return self._check_response(r)
@@ -131,7 +135,7 @@ class Truewallet(object):
 					'reference_token': self.reference_token,
 					'device_id': self.device_id,
 					'mobile_tracking': self.mobile_tracking,
-					'timestamp' timestamp,
+					'timestamp': timestamp,
 					'signature': str(hmac.new(self.Secret_key, "{}|{}|{}|{}|{}".format(self.credentials['type'], self.reference_token, self.device_id, self.mobile_tracking, timestamp).encode('utf-8'), hashlib.sha1).hexdigest())
 				},
 				headers={
@@ -148,30 +152,30 @@ class Truewallet(object):
 	def Logout(self):
 		if self.access_token is None: return False
 		r = requests.get(self.Logout_url + self.access_token,
-                headers={
+				headers={
 					'host': 'mobile-api-gateway.truemoney.com',
 					'User-agent': 'okhttp/3.8.0'
 				}
-            )
+			)
 		return self._check_response(r)
 	def GetProfile(self):
 		if self.access_token is None: return False
 		r = requests.get(self.GetProfile_url,
-                headers={
+				headers={
 					'host': 'mobile-api-gateway.truemoney.com',
 					'User-agent': 'okhttp/3.8.0',
 					'Authorization': self.access_token
 				}
-            )
+			)
 		return self._check_response(r)
 
 	def GetBalance(self):
 		if self.access_token is None: return False
 		r = requests.get(self.GetBalance_url,
-                headers={
+				headers={
 					'host': 'mobile-api-gateway.truemoney.com',
 					'User-agent': 'okhttp/3.8.0',
 					'Authorization': self.access_token
 				}
-            )
+			)
 		return self._check_response(r)
