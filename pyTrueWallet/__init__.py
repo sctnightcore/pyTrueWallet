@@ -28,7 +28,7 @@ class Truewallet(object):
 				with open("truewallet_identity.json", 'w') as File:
 					json.dump(self.generate_identity(), File)
 
-		if email is not None and passowrd is not None:
+		if email is not None and password is not None:
 			self.setCredentials(email, password, reference_token)
 		elif email is not None:
 			self.setAccessToken(email)
