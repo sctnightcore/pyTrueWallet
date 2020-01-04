@@ -37,6 +37,10 @@ class Truewallet(object):
 		try:
 			data_json = json.load(data.content)
 			if data_json.get("data"):
+				if data_json["data"]["access_token"]:
+        			self.setAccessToken(data_json["data"]["access_token"])
+				if data_json["data"]["reference_token"]:
+        			self.setReferenceToken(data_json["data"]["reference_token"])
 				self.data = data_json["data"]
 				return data_json
 			else:
@@ -51,7 +55,7 @@ class Truewallet(object):
 
 	def setCredentials(self, username=None, password=None, reference_token=None, type=None):
 		if type is None:
-			if re.search('^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$', username):
+			if re.search(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$', username):
 				type = "email"
 			else: 
 				type = "mobile"
@@ -122,8 +126,6 @@ class Truewallet(object):
 					'password': self.credentials["password_enc"]
 				}
 			)
-		if data_json["data"]["access_token"]: self.setAccessToken(data_json["data"]["access_token"])
-		if data_json["data"]["reference_token"]: self.setReferenceToken(data_json["data"]["reference_token"])
 		return self._check_response(r)
 
 	def Login(self):
@@ -146,7 +148,6 @@ class Truewallet(object):
 					'password': self.credentials["password_enc"]
 				}
 			)
-		if data_json["data"]["access_token"]: self.setAccessToken(data_json["data"]["access_token"])
 		return self._check_response(r)
 
 	def Logout(self):
