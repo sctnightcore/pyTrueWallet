@@ -1,4 +1,4 @@
-import os.path, time, requests, hashlib, hmac, base64, os, re
+import os.path, time, requests, hashlib, hmac, base64, os, re, json
 from .exception import TruewalletException
 from datetime import datetime, timedelta
 
@@ -38,9 +38,9 @@ class Truewallet(object):
 			data_json = json.load(data.content)
 			if data_json.get("data"):
 				if data_json["data"]["access_token"]:
-        			self.setAccessToken(data_json["data"]["access_token"])
+					self.setAccessToken(data_json["data"]["access_token"])
 				if data_json["data"]["reference_token"]:
-        			self.setReferenceToken(data_json["data"]["reference_token"])
+					self.setReferenceToken(data_json["data"]["reference_token"])
 				self.data = data_json["data"]
 				return data_json
 			else:
