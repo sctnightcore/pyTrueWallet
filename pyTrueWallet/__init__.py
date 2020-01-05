@@ -43,7 +43,7 @@ class Truewallet(object):
 				self.data = data_json["data"]
 				return data_json
 			else:
-				data_json
+				return data.content
 		except ValueError:
 			raise Exception("{}|{}".format(data.status_code, data.content))
 
