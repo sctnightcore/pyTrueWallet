@@ -1,5 +1,4 @@
 import os.path, time, requests, hashlib, hmac, base64, os, re, json
-from .exception import TruewalletException
 from datetime import datetime, timedelta
 
 class Truewallet(object):
@@ -46,7 +45,7 @@ class Truewallet(object):
 			else:
 				data_json
 		except ValueError as e:
-			raise TruewalletException(data.status_code, data.content)
+			raise Exception("{}|{}".format(data.status_code, data.content))
 
 	def generate_identity(self):
 		self.mobile_tracking = base64.b64encode(os.urandom(40))
