@@ -44,7 +44,7 @@ class Truewallet(object):
 				return data_json
 			else:
 				data_json
-		except ValueError as e:
+		except ValueError:
 			raise Exception("{}|{}".format(data.status_code, data.content))
 
 	def generate_identity(self):
@@ -58,7 +58,6 @@ class Truewallet(object):
 				type = "email"
 			else: 
 				type = "mobile"
-
 		self.credentials["username"] = str(username)
 		self.credentials["password"] = str(password)
 		self.credentials["password_enc"] = str(hashlib.sha1((self.credentials['username']+self.credentials['password']).encode('utf-8')).hexdigest())
