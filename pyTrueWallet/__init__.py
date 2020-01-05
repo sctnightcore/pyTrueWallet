@@ -11,7 +11,8 @@ class Truewallet(object):
 	GetProfile_url = Base_url + "/user-profile-composite/v1/users/"
 	GetBalance_url = Base_url + "/user-profile-composite/v1/users/balance/"
 	GetTransaction_url = Base_url + "/user-profile-composite/v1/users/transactions/history/"
-
+	GetTransactionReport_url = Base_url + "/user-profile-composite/v1/users/transactions/history/detail/{}"
+	TopupCashcard_url = Base_url + "/api/v1/topup/mobile/{}/{}/cashcard/{}"
 	def __init__(self, email=None, password=None, reference_token=None):
 		self.device_id = None
 		self.mobile_tracking = None
@@ -177,4 +178,46 @@ class Truewallet(object):
 					'Authorization': self.access_token
 				}
 			)
+		return self._check_response(r)
+
+	def GetTransaction(self, startdate=None, enddate=None, limit=None):
+		if self.access_token is None: return False
+		if startdate is None: startdate = datetime.now().date() - timedelta(day=+120)
+		if enddate is None: enddate = datetime.now().date() - timedelta(day=-30)
+		if startdate is None or  enddate is None: return False
+		r = requests.get(self.GetTransaction_url,
+                headers={
+					'host': 'mobile-api-gateway.truemoney.com',
+					'User-agent': 'okhttp/3.8.0',
+					'Authorization': self.access_token
+				},
+                params={
+					'start_date': startdate,
+					'end_date': enddate,
+					'limit': limit
+				}
+            )
+		return self._check_response(r)
+
+	def GetTransactionReport(self, report_id):
+		if self.access_token is None: return False
+		r = requests.get(self.GetTransaction_url.format(report_id),
+                headers={
+					'host': 'mobile-api-gateway.truemoney.com',
+					'User-agent': 'okhttp/3.8.0',
+					'Authorization': self.access_token
+				}
+            )
+		return self._check_response(r)
+
+	def TopupCashcard(self, cashcard):
+		if self.access_token is None: return False
+		timestamp = self.getTimestamp()
+		r = requests.post(self.TopupCashcard_url.format(timestamp, self.access_token, cashcard),
+                headers={
+					'host': 'mobile-api-gateway.truemoney.com',
+					'User-agent': 'okhttp/3.8.0',
+					'Authorization': self.access_token
+				}
+            )
 		return self._check_response(r)
