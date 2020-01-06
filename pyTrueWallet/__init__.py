@@ -196,7 +196,7 @@ class Truewallet(object):
 					'end_date': enddate,
 					'limit': limit
 				}
-            )
+    		)
 		return self._check_response(r)
 
 	def GetTransactionReport(self, report_id):
@@ -207,7 +207,7 @@ class Truewallet(object):
 					'User-agent': 'okhttp/3.8.0',
 					'Authorization': self.access_token
 				}
-            )
+    		)
 		return self._check_response(r)
 
 	def TopupCashcard(self, cashcard):
@@ -219,5 +219,5 @@ class Truewallet(object):
 					'User-agent': 'okhttp/3.8.0',
 					'Authorization': self.access_token
 				}
-            )
+    		)
 		return self._check_response(r)
